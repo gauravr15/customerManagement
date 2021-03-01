@@ -14,7 +14,7 @@ import com.odin.dbController.dbSetup;
 public class startup extends HttpServlet{
 	
 	/**
-	 * 
+	 * hesaabKhaataV1.1
 	 */
 	private static final long serialVersionUID = 5987901213242640293L;
 	static Logger LOG = Logger.getLogger(startup.class.getClass());
