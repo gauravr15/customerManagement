@@ -70,21 +70,25 @@ span.psw {
 
 <h2>Login Form</h2>
 
-<form action="/Subscription/login" method="post">
   <div class="imgcontainer">
     <img src="img_avatar2.png" alt="Avatar" class="avatar">
   </div>
 
   <div class="container">
-    <label for="username"><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="username" required>
-
-    <label for="password"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="password" required>
-        
-    <button type="submit">Login</button>
+    
+	
+	<form action="/Subscription/billing" method="post">
+    
+    <input name = "name" type = "text" placeholder="Customer name">
+	<input name = "mob_no" type = "text" placeholder="Mobile Number">
+	<input name = "service" type = "text" placeholder="Services">
+	<input name = "bill" type = "text" placeholder="Bill Amount">
+	<input name = "point" type = "text" default="0" placeholder="Redeem Points">
+	
+    <button type="submit">Generate Bill</button>
+	</form>
+	
   </div>
-</form>
 
 </body>
 </html>
