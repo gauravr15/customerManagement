@@ -1,5 +1,7 @@
 package com.odin.login;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +18,7 @@ public class loginController extends HttpServlet{
 	
 	Logger LOG =Logger.getLogger(loginController.class.getClass());
 	
-	public void doPost(HttpServletRequest req, HttpServletResponse res) {
+	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		cmHealth obj = cmHealth.getInstance();
 		HttpSession session = req.getSession();
 		if(obj.propCheck == true && obj.clockHealth == true && obj.dbHealth == true) {
@@ -29,7 +31,9 @@ public class loginController extends HttpServlet{
 				boolean userAuth = queryObj.loginHandler(UserName, Password);
 				if(userAuth == true) {
 					session.setAttribute("user", UserName);
-					LOG.debug("user logged in as : "+session.getAttribute("user"));
+					LOG.debug("logged in as : "+session.getAttribute("user"));
+					LOG.debug("User being redirected to home.html");
+					res.sendRedirect("http://localhost:8080/Subscription/home.html");
 				}
 				else {
 					LOG.error("no such user found.");
@@ -38,5 +42,6 @@ public class loginController extends HttpServlet{
 		else {
 			LOG.error("Please check system health from log.");
 		}
+		
 	}
 }
