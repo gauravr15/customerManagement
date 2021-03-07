@@ -10,12 +10,14 @@ import java.sql.Statement;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
 
 
 public class queryHandler extends HttpServlet{
+	
 	
 	Logger LOG = Logger.getLogger(queryHandler.class.getClass());
 	HttpServletResponse res = null;
@@ -63,7 +65,8 @@ public class queryHandler extends HttpServlet{
 		return userAuth;
 	}
 	
-	public void billingHandler(String mob,String bill) {
+	public boolean billingHandler(String mob,String service, String bill) {
+		boolean task_performed = false;
 		dbSetup dbObj = new dbSetup();
 		Connection conn = dbObj.dbInit();
 		Statement stmt = null;
@@ -74,15 +77,23 @@ public class queryHandler extends HttpServlet{
 			LOG.info("query to fire is "+query);
 			rs = stmt.executeQuery(query);
 			if(rs.next()) {
+				int calc_point = Integer.parseInt(bill)/10;
+				String customer_name = rs.getString("NAME");
+				String regt_date = rs.getString("REGISTRATION_DATE");
 				String total_point = rs.getString("TOTAL_POINTS");
 				LOG.info("Total points for user :"+mob+" is :"+total_point);
-				int calc_point = Integer.parseInt(bill)/10;
 				total_point = Integer.toString(Integer.parseInt(total_point)+calc_point);
 				LOG.info("Points added for this transaction is : "+calc_point);
 				LOG.info("Total points for user : "+mob+" is : "+total_point);
+				LOG.info("Customer name is : "+customer_name+" and registration date is : "+regt_date);
+				query = "INSERT INTO CUSTOMERS VALUES ('"+customer_name+"','"+mob+"','"+regt_date+"',NOW(),'"+service+"','"+calc_point+"');";
+				LOG.info("Query to fire : "+query);
+				stmt.executeUpdate(query);
+				
 				query = "UPDATE CUSTOMER_INFO SET TOTAL_POINTS = '"+total_point+"' WHERE mobile_no = '"+mob+"';";
 				LOG.info("Query to fire : "+query);
 				if(stmt.executeUpdate(query)!=0) {
+					task_performed = true;
 					LOG.info("Points updated successfully");
 				}
 				else {
@@ -110,9 +121,10 @@ public class queryHandler extends HttpServlet{
 				e.printStackTrace();
 			}
 		}
+		return task_performed;
 	}
 	
-	public void billingHandler(String mob,String bill, String point) {
+	public void billingHandler(String mob,String service ,String bill, String point) {
 		dbSetup dbObj = new dbSetup();
 		Connection conn = dbObj.dbInit();
 		Statement stmt = null;
@@ -127,7 +139,7 @@ public class queryHandler extends HttpServlet{
 				LOG.info("Total points for user :"+mob+" is :"+total_point);
 				if(total_point < Integer.parseInt(point)) {
 					LOG.debug("Insufficient points");
-					billingHandler(mob,bill);
+					billingHandler(mob,service,bill);
 				}
 				else {
 					int calc_point = total_point - Integer.parseInt(point);
