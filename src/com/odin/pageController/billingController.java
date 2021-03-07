@@ -1,6 +1,7 @@
 package com.odin.pageController;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,12 +25,24 @@ public class billingController extends HttpServlet{
 			String service = req.getParameter("service");
 			String bill = req.getParameter("bill");
 			String point = req.getParameter("point");
+			//session.setAttribute("cart", service);
 			queryHandler queryObj = new queryHandler();
 			if(point.isEmpty()) {
-				queryObj.billingHandler(mob,bill);
+				boolean task_performed = queryObj.billingHandler(mob,service, bill);
+				LOG.info("task performed = "+task_performed);
+				if(task_performed = true) {
+					String[] serviceList = service.split(",");
+					HashMap<String, String> serviceMap = new HashMap<String, String>();
+					for(int i =0; i< serviceList.length;i++) {
+						String productBill = serviceList[i].trim();
+						String[] billBreakdown = productBill.split(" ");
+						serviceMap.put(billBreakdown[0], billBreakdown [1]);
+					}
+					LOG.info("bill breakdown is : "+serviceMap);
+				}
 			}
 			else if (!point.isEmpty() || point == "0") {
-				queryObj.billingHandler(mob,bill,point);
+				queryObj.billingHandler(mob,service,bill,point);
 			}
 		}
 		else {
