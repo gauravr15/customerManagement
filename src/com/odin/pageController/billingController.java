@@ -31,14 +31,9 @@ public class billingController extends HttpServlet{
 				boolean task_performed = queryObj.billingHandler(mob,service, bill);
 				LOG.info("task performed = "+task_performed);
 				if(task_performed = true) {
-					String[] serviceList = service.split(",");
-					HashMap<String, String> serviceMap = new HashMap<String, String>();
-					for(int i =0; i< serviceList.length;i++) {
-						String productBill = serviceList[i].trim();
-						String[] billBreakdown = productBill.split(" ");
-						serviceMap.put(billBreakdown[0], billBreakdown [1]);
-					}
-					LOG.info("bill breakdown is : "+serviceMap);
+					HttpSession customer_phone = req.getSession();
+					customer_phone.setAttribute("customer_phone", mob);
+					res.sendRedirect("http://localhost:8080/Subscription/invoice.jsp");
 				}
 			}
 			else if (!point.isEmpty() || point == "0") {
