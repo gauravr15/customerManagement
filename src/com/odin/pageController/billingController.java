@@ -1,7 +1,6 @@
 package com.odin.pageController;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +9,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import com.odin.customerController.customerHandler;
+import com.odin.customerController.validateCustomer;
 import com.odin.dbController.queryHandler;
+import com.odin.smsController.sendSms;
+
 
 
 
@@ -23,23 +26,39 @@ public class billingController extends HttpServlet{
 			String name = req.getParameter("name");
 			String mob = req.getParameter("mob_no");
 			String service = req.getParameter("service");
-			String bill = req.getParameter("bill");
 			String point = req.getParameter("point");
-			//session.setAttribute("cart", service);
-			queryHandler queryObj = new queryHandler();
-			if(point.isEmpty()) {
-				boolean task_performed = queryObj.billingHandler(mob,service, bill);
-				LOG.info("task performed = "+task_performed);
-				if(task_performed = true) {
-					HttpSession customer_phone = req.getSession();
-					customer_phone.setAttribute("customer_phone", mob);
-					res.sendRedirect("http://localhost:8080/Subscription/invoice.jsp");
+			validateCustomer customerValidateObj = new validateCustomer();
+			boolean isCustomerAvailable = customerValidateObj.customerCheck(mob);
+			if(isCustomerAvailable == false) {
+				customerHandler customerObj = new customerHandler();
+				boolean createCustomer = customerObj.createCustomer(mob, name);
+				if(createCustomer == true) {
+					LOG.debug("User created successfully");
+				}
+				queryHandler queryObj = new queryHandler();
+				boolean task_performed = queryObj.billingHandler(mob, service);
+				if(task_performed == true) {
+					int billAmount = 0;
+					String[] serviceList = service.split(",");
+					String message = "Thank you for opting for";
+					for(int i = 0;i<serviceList.length;i++) {
+						String[] servicesOpt = serviceList[i].trim().split(" ");
+						message = message+" "+servicesOpt[0]+",";
+						billAmount = billAmount +  Integer.parseInt(servicesOpt[1]);
+					}
+					
+					
+					message = message+"services. Your total bill amount is "+billAmount+". Thank you and please visit again. Regards Radiance beauty Parlour.";
+					LOG.debug(message);
+					sendSms smsObj = new sendSms();
+					smsObj.sms(message, mob);
 				}
 			}
-			else if (!point.isEmpty() || point == "0") {
-				queryObj.billingHandler(mob,service,bill,point);
+			else if (isCustomerAvailable == true) {
+				LOG.debug("Customer exists");
 			}
 		}
+			
 		else {
 			res.sendRedirect("http://localhost:8080/Subscription/login.html");
 		}
