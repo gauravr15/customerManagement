@@ -2,6 +2,7 @@
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
+
 <%
 String id = request.getParameter("userid");
 String driver = "com.mysql.jdbc.Driver";
@@ -23,10 +24,10 @@ ResultSet resultSet = null;
 <body>
 
 <p>Invoice</p>
-<table border="1">
+<table style="width:100%">
 <tr>
-<td>first name</td>
-<td>last name</td>
+<td>Service</td>
+<td>Amount</td>
 </tr>
 <%
 try{
@@ -58,5 +59,23 @@ e.printStackTrace();
 }
 %>
 </table>
+<style>
+            body {
+                text-align:center;
+            }
+            @media print {
+               .noprint {
+                  visibility: hidden;
+               }
+            }
+        </style>
+<button class = "noprint" onclick="window.print()">Print Bill</button>
+<button class = "noprint" onclick="homePage()">Home</button>
+
+<script>
+function homePage() {
+  location.replace("http://localhost:8080/Subscription/home.html")
+}
+</script>
 </body>
 </html>

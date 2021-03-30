@@ -10,9 +10,11 @@ import java.sql.Statement;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
 
 import org.apache.log4j.Logger;
+
+import com.odin.billing.billCalculator;
 
 
 
@@ -65,113 +67,53 @@ public class queryHandler extends HttpServlet{
 		return userAuth;
 	}
 	
-	public boolean billingHandler(String mob,String service, String bill) {
+	public boolean billingHandler(String mob,String service) {
 		boolean task_performed = false;
 		dbSetup dbObj = new dbSetup();
 		Connection conn = dbObj.dbInit();
 		Statement stmt = null;
 		ResultSet rs = null;
+		String query = "SELECT * FROM CUSTOMER_INFO WHERE MOBILE_NO = '"+mob+"'";
 		try {
-			String query = "SELECT * FROM CUSTOMER_INFO WHERE mobile_no = '"+mob+"';";
+			LOG.debug("Query to fire : "+query);
 			stmt = conn.createStatement();
-			LOG.info("query to fire is "+query);
 			rs = stmt.executeQuery(query);
-			if(rs.next()) {
-				int calc_point = Integer.parseInt(bill)/10;
-				String customer_name = rs.getString("NAME");
-				String regt_date = rs.getString("REGISTRATION_DATE");
-				String total_point = rs.getString("TOTAL_POINTS");
-				LOG.info("Total points for user :"+mob+" is :"+total_point);
-				total_point = Integer.toString(Integer.parseInt(total_point)+calc_point);
-				LOG.info("Points added for this transaction is : "+calc_point);
-				LOG.info("Total points for user : "+mob+" is : "+total_point);
-				LOG.info("Customer name is : "+customer_name+" and registration date is : "+regt_date);
-				query = "INSERT INTO CUSTOMERS VALUES ('"+customer_name+"','"+mob+"','"+regt_date+"',NOW(),'"+service+"','"+calc_point+"');";
-				LOG.info("Query to fire : "+query);
-				stmt.executeUpdate(query);
-				
-				query = "UPDATE CUSTOMER_INFO SET TOTAL_POINTS = '"+total_point+"' WHERE mobile_no = '"+mob+"';";
-				LOG.info("Query to fire : "+query);
-				if(stmt.executeUpdate(query)!=0) {
-					task_performed = true;
-					LOG.info("Points updated successfully");
-				}
-				else {
-					LOG.error("Failed to update points");
-				}
+			String name = null;
+			String registration_date = null;
+			int total_point = 0;
+			while(rs.next()) {
+				name = rs.getString("NAME");
+				registration_date = rs.getString("REGISTRATION_DATE");
+				total_point = Integer.parseInt(rs.getString("total_points"));
 			}
-			else {
-				LOG.info("customer doesn't exist");
-			}
-		}
-		catch (SQLException e) {
+			billCalculator billObj = new billCalculator();
+			int billAmount = billObj.billAmount(service);
+			int newPoint = total_point + (billAmount/10);
+			query = "INSERT INTO CUSTOMERS VALUES ('"+name+"','"+mob+"','"+registration_date+"',NOW(),'"+service+"','"+billAmount+"','"+newPoint+"');";
+			stmt.executeUpdate(query);
+			query = "UPDATE CUSTOMER_INFO SET TOTAL_POINTS = '"+total_point+"' WHERE mobile_no = '"+mob+"';";
+			stmt.executeUpdate(query);
+			task_performed = true;
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			LOG.error("Unable to create statement.");
-			e.printStackTrace();
+			LOG.error(e);
 		}
-		finally{
+		finally {
 			try {
-				LOG.debug("Releasing db connection");
 				rs.close();
 				stmt.close();
 				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				LOG.error("Failed to release connection.");
-				e.printStackTrace();
+				LOG.error(e);
 			}
+			
 		}
 		return task_performed;
 	}
 	
-	public void billingHandler(String mob,String service ,String bill, String point) {
-		dbSetup dbObj = new dbSetup();
-		Connection conn = dbObj.dbInit();
-		Statement stmt = null;
-		ResultSet rs = null;
-		try {
-			String query = "SELECT * FROM CUSTOMER_INFO WHERE mobile_no = '"+mob+"';";
-			stmt = conn.createStatement();
-			LOG.info("query to fire is "+query);
-			rs = stmt.executeQuery(query);
-			if(rs.next()) {
-				int total_point = Integer.parseInt(rs.getString("TOTAL_POINTS"));
-				LOG.info("Total points for user :"+mob+" is :"+total_point);
-				if(total_point < Integer.parseInt(point)) {
-					LOG.debug("Insufficient points");
-					billingHandler(mob,service,bill);
-				}
-				else {
-					int calc_point = total_point - Integer.parseInt(point);
-					query = "UPDATE CUSTOMER_INFO SET TOTAL_POINTS = '"+calc_point+"' WHERE mobile_no = '"+mob+"';";
-					if(stmt.executeUpdate(query)!=0){
-						LOG.info("Points deducted successfully");
-					}
-					else {
-						LOG.info("Points deduction failed");
-					}
-				}
-			}
-			else {
-				LOG.error("user doesn't exists");
-			}
-		}
-		catch (SQLException e) {
-			// TODO Auto-generated catch block
-			LOG.error("Unable to create statement.");
-			e.printStackTrace();
-		}
-		finally{
-			try {
-				LOG.debug("Releasing db connection");
-				rs.close();
-				stmt.close();
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				LOG.error("Failed to release connection.");
-				e.printStackTrace();
-			}
-		}
+	public boolean billingHandler(String mob,String service,String bill, String point) {
+		boolean task_performed = false;
+		return task_performed;
 	}
 }
