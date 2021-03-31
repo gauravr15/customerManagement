@@ -22,6 +22,7 @@ public class billingController extends HttpServlet{
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException{
 		LOG.info("inside billingController class");
 		HttpSession session= req.getSession();
+		queryHandler queryObj = new queryHandler();
 		if(session.getAttribute("user")!=null) {
 			String name = req.getParameter("name");
 			String mob = req.getParameter("mob_no");
@@ -35,7 +36,7 @@ public class billingController extends HttpServlet{
 				if(createCustomer == true) {
 					LOG.debug("User created successfully");
 				}
-				queryHandler queryObj = new queryHandler();
+				
 				boolean task_performed = queryObj.billingHandler(mob, service);
 				if(task_performed == true) {
 					int billAmount = 0;
@@ -46,8 +47,6 @@ public class billingController extends HttpServlet{
 						message = message+" "+servicesOpt[0]+",";
 						billAmount = billAmount +  Integer.parseInt(servicesOpt[1]);
 					}
-					
-					
 					message = message+"services. Your total bill amount is "+billAmount+". Thank you and please visit again. Regards Radiance beauty Parlour.";
 					LOG.debug(message);
 					sendSms smsObj = new sendSms();
@@ -60,7 +59,7 @@ public class billingController extends HttpServlet{
 		}
 			
 		else {
-			res.sendRedirect("http://localhost:8080/Subscription/login.html");
+			res.sendRedirect("http://"+queryObj.ipSetup()+":8080/Subscription/login.html");
 		}
 	}
 }

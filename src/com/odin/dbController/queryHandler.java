@@ -67,6 +67,38 @@ public class queryHandler extends HttpServlet{
 		return userAuth;
 	}
 	
+	public String ipSetup() {
+		String ip = null;
+		dbSetup dbObj = new dbSetup();
+		Connection conn = dbObj.dbInit();
+		Statement stmt = null;
+		ResultSet rs = null;
+		try {
+			String query = "SELECT * FROM CONFIG WHERE MODULE = 'SYSTEM' AND TYPE = 0 AND PARAM_NAME = 'HOST_IP';";
+			LOG.debug("Query to fire : "+query);
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
+			while(rs.next()) {
+				ip = rs.getString("PARAM_VALUE");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			LOG.error(e);
+		}
+		finally{
+			try {
+				rs.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				LOG.error(e);
+			}
+			
+		}
+		return ip;
+	}
+	
 	public boolean billingHandler(String mob,String service) {
 		boolean task_performed = false;
 		dbSetup dbObj = new dbSetup();

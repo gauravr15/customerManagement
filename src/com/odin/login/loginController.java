@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import com.odin.core.cmHealth;
+import com.odin.core.ipConfig;
 import com.odin.dbController.queryHandler;
 
 
@@ -30,10 +31,11 @@ public class loginController extends HttpServlet{
 				queryHandler queryObj = new queryHandler();
 				boolean userAuth = queryObj.loginHandler(UserName, Password);
 				if(userAuth == true) {
+					String ip = queryObj.ipSetup();
 					session.setAttribute("user", UserName);
 					LOG.debug("logged in as : "+session.getAttribute("user"));
 					LOG.debug("User being redirected to home.html");
-					res.sendRedirect("http://localhost:8080/Subscription/home.html");
+					res.sendRedirect("http://"+ip+":8080/Subscription/home.html");
 				}
 				else {
 					LOG.error("no such user found.");
