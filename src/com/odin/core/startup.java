@@ -37,6 +37,11 @@ public class startup extends HttpServlet{
 			e.printStackTrace();
 			System.exit(0);
 		}
+		ipConfig ipObj = new ipConfig();
+		if(ipObj.ipSetup()==false) {
+			LOG.error("Cannot set host ip");
+			System.exit(0);
+		}
 		LOG.debug("Calling db setup");
 		dbSetup dbSetupObj = new dbSetup();
 		Connection conn = dbSetupObj.dbInit();

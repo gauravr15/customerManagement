@@ -4,10 +4,15 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.log4j.Logger;
+
+import com.odin.dbController.dbSetup;
 
 
 
@@ -22,7 +27,11 @@ public class sendSms {
 
 		try
 		{
-		
+		dbSetup dbObj = new dbSetup();
+		Connection conn = dbObj.dbInit();
+		Statement stmt = null;
+		ResultSet rs = null;
+		String query = "INSERT INTO ";
 		String apiKey="C18ZxQSlaz36R7rBJjwFcbHnGYuM5fpsD9AhXT2VyvIeKioW0EvQVtbzMAeoyGwS4u0dKOaH3nBZgi1h";
 		String sendId="FSTSMS";
 		//important step...
