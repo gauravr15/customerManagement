@@ -2,6 +2,7 @@ package com.odin.core;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.servlet.http.HttpServlet;
@@ -53,6 +54,13 @@ public class startup extends HttpServlet{
 		else {
 			LOG.error("db Health is : "+obj.dbHealth);
 			LOG.error("Unsuccessful connection returned");
+		}
+		try {
+			conn.close();
+			LOG.debug("Connection released successfully");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			LOG.error(e);
 		}
 	}
 }

@@ -24,6 +24,14 @@ public class customerHandler {
 			LOG.debug("Query to execute : "+query);
 			stmt = conn.createStatement();
 			rs = stmt.executeUpdate(query);
+			if(rs != 0) {
+				task_performed = true;
+				LOG.debug("created new customer : "+task_performed);
+			}
+			else {
+				task_performed = false;
+				LOG.debug("failed to create new customer");
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			LOG.error(e);

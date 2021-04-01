@@ -1,9 +1,8 @@
 package com.odin.dbController;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,6 +20,10 @@ import com.odin.billing.billCalculator;
 public class queryHandler extends HttpServlet{
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8183483807501189012L;
 	Logger LOG = Logger.getLogger(queryHandler.class.getClass());
 	HttpServletResponse res = null;
 	public boolean loginHandler(String user, String pass) {
@@ -115,15 +118,18 @@ public class queryHandler extends HttpServlet{
 			int total_point = 0;
 			while(rs.next()) {
 				name = rs.getString("NAME");
+				LOG.debug("name of customer is : "+name);
 				registration_date = rs.getString("REGISTRATION_DATE");
 				total_point = Integer.parseInt(rs.getString("total_points"));
 			}
 			billCalculator billObj = new billCalculator();
 			int billAmount = billObj.billAmount(service);
 			int newPoint = total_point + (billAmount/10);
-			query = "INSERT INTO CUSTOMERS VALUES ('"+name+"','"+mob+"','"+registration_date+"',NOW(),'"+service+"','"+billAmount+"','"+newPoint+"');";
+			query = "INSERT INTO CUSTOMERS VALUES ('"+name+"','"+mob+"','"+registration_date+"',NOW(),'"+service+"','"+billAmount+"','"+billAmount/10+"');";
+			LOG.debug("Query to fire : "+query);
 			stmt.executeUpdate(query);
-			query = "UPDATE CUSTOMER_INFO SET TOTAL_POINTS = '"+total_point+"' WHERE mobile_no = '"+mob+"';";
+			query = "UPDATE CUSTOMER_INFO SET TOTAL_POINTS = '"+newPoint+"' WHERE mobile_no = '"+mob+"';";
+			LOG.debug("Query to fire : "+query);
 			stmt.executeUpdate(query);
 			task_performed = true;
 		} catch (SQLException e) {

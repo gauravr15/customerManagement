@@ -1,6 +1,10 @@
 package com.odin.servlet.filter;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -13,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+
+import com.odin.dbController.queryHandler;
 
 
 
@@ -47,13 +53,15 @@ public class homeFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpSession session = req.getSession();
 		LOG.debug(session.getAttribute("user"));
+		queryHandler queryObj = new queryHandler();
+		String ip = queryObj.ipSetup();
 		if(session.getAttribute("user")!=null) {
 			LOG.debug("user logged in");
 			chain.doFilter(request, response);
 		}
 		else {
 			HttpServletResponse res = (HttpServletResponse)response;
-			res.sendRedirect("http://localhost:8080/Subscription/login.html");
+			res.sendRedirect("http://"+ip+":8080/Subscription/login.html");
 			LOG.error("user needs to log in first");
 		}
 		

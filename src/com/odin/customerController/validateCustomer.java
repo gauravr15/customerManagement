@@ -22,6 +22,7 @@ public class validateCustomer {
 		ResultSet rs = null;
 		String query = "SELECT * FROM CUSTOMER_INFO WHERE MOBILE_NO = '"+mob+"';";
 		try {
+			LOG.debug("Query to fire : "+query);
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(query);
 			if(rs.next()) {
