@@ -16,13 +16,13 @@ public class dbSetup {
 	
 	public Connection dbInit() {
 		LOG.debug("inside db setup ");
-		fetchProperties obj = fetchProperties.getInstance();
-		String dbDriver = obj.dbDriver;
-		String dbAddress = obj.dbAddress;
-		String dbPort = obj.dbPort;
-		String dbName = obj.dbName;
-		String dbUser = obj.dbUser;
-		String dbPass = obj.dbPass;
+		//fetchProperties propObj = fetchProperties.getInstance();
+		String dbDriver = fetchProperties.getInstance().getDbDriver();
+		String dbAddress = fetchProperties.getInstance().getDbAddress();
+		String dbPort = fetchProperties.getInstance().getDbPort();
+		String dbName = fetchProperties.getInstance().getDbName();
+		String dbUser = fetchProperties.getInstance().getDbUser();
+		String dbPass = fetchProperties.getInstance().getDbPass();
 		String url = dbAddress+dbPort+dbName;
 		Connection conn = null;
 		

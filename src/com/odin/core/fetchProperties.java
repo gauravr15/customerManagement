@@ -14,12 +14,12 @@ public class fetchProperties {
 	
 	static Logger LOG = Logger.getLogger(fetchProperties.class.getClass());
 	public static fetchProperties obj = new fetchProperties();
-	public static String dbDriver = null;
-	public static String dbAddress = null;
-	public static String dbPort = null;
-	public static String dbName = null;
-	public static String dbUser = null;
-	public static String dbPass = null;
+	private static String dbDriver = null;
+	private static String dbAddress = null;
+	private static String dbPort = null;
+	private static String dbName = null;
+	private static String dbUser = null;
+	private static String dbPass = null;
 	
 	
 	private fetchProperties() {
@@ -33,15 +33,14 @@ public class fetchProperties {
 			Properties prop = new Properties();
 			try {
 				prop.load(reader);
-				dbDriver = prop.getProperty("dbDriver");
-				dbAddress = prop.getProperty("dbAddress");
-				dbPort = prop.getProperty("dbPort");
-				dbName = prop.getProperty("dbName");
-				dbUser = prop.getProperty("dbUser");
-				dbPass = prop.getProperty("dbPass");
-				cmHealth obj = cmHealth.getInstance();
-				obj.propCheck = true;
-				LOG.debug("propCheck is : "+obj.propCheck);
+				setDbDriver(prop.getProperty("dbDriver"));
+				setDbAddress(prop.getProperty("dbAddress"));
+				setDbPort(prop.getProperty("dbPort"));
+				setDbName(prop.getProperty("dbName"));
+				setDbUser(prop.getProperty("dbUser"));
+				setDbPass(prop.getProperty("dbPass"));
+				cmHealth.propCheck = true;
+				LOG.debug("propCheck is : "+cmHealth.propCheck);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				LOG.error("Error while processing properties file : "+e);
@@ -54,6 +53,54 @@ public class fetchProperties {
 			System.exit(0);
 		}
 		return obj;
+	}
+
+	public String getDbDriver() {
+		return dbDriver;
+	}
+
+	public static void setDbDriver(String dbDriver) {
+		fetchProperties.dbDriver = dbDriver;
+	}
+
+	public String getDbAddress() {
+		return dbAddress;
+	}
+
+	public static void setDbAddress(String dbAddress) {
+		fetchProperties.dbAddress = dbAddress;
+	}
+
+	public String getDbPort() {
+		return dbPort;
+	}
+
+	public static void setDbPort(String dbPort) {
+		fetchProperties.dbPort = dbPort;
+	}
+
+	public String getDbName() {
+		return dbName;
+	}
+
+	public static void setDbName(String dbName) {
+		fetchProperties.dbName = dbName;
+	}
+
+	public String getDbUser() {
+		return dbUser;
+	}
+
+	public static void setDbUser(String dbUser) {
+		fetchProperties.dbUser = dbUser;
+	}
+
+	public String getDbPass() {
+		return dbPass;
+	}
+
+	public static void setDbPass(String dbPass) {
+		fetchProperties.dbPass = dbPass;
 	}
 	
 }

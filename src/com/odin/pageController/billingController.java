@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import com.odin.customerController.customerHandler;
+import com.odin.customerController.pointsController;
 import com.odin.customerController.validateCustomer;
 import com.odin.dbController.queryHandler;
 //import com.odin.smsController.sendSms;
@@ -81,7 +82,14 @@ public class billingController extends HttpServlet{
 					}
 				}
 				else if(!point.isEmpty() || point != Integer.toString(0)){
-					
+					pointsController pointObj = new pointsController();
+					boolean IS_POINT_AVAILABLE = pointObj.pointsCheck(mob, point);
+					if(IS_POINT_AVAILABLE == true) {
+						LOG.debug("Points available");
+					}
+					else {
+						LOG.debug("Insufficient points");
+					}
 				}
 			}
 		}

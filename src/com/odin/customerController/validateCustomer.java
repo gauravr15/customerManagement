@@ -43,6 +43,7 @@ public class validateCustomer {
 				rs.close();
 				stmt.close();
 				conn.close();
+				LOG.debug("Releasing DB connection");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				LOG.error(e);

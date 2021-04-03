@@ -3,7 +3,6 @@ package com.odin.core;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.servlet.http.HttpServlet;
 
@@ -21,19 +20,18 @@ public class startup extends HttpServlet{
 	static Logger LOG = Logger.getLogger(startup.class.getClass());
 	
 	public void init() {
-		cmHealth obj = cmHealth.getInstance();
 		LOG.debug("startup has started");
 		LOG.debug("Calling timeCheck");
 		timeCheck timeObj = new timeCheck();
 		try {
 			if(timeObj.TimeInit()==true) {
 				LOG.debug("Time check has been performed successfully.....");
-				obj.clockHealth = true;
-				LOG.debug("Clock health is : "+obj.clockHealth);
+				cmHealth.clockHealth = true;
+				LOG.debug("Clock health is : "+cmHealth.clockHealth);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			LOG.error("Clock health is : "+obj.clockHealth);
+			LOG.error("Clock health is : "+cmHealth.clockHealth);
 			LOG.error("Time Check failed .....");
 			e.printStackTrace();
 			System.exit(0);
@@ -48,19 +46,30 @@ public class startup extends HttpServlet{
 		Connection conn = dbSetupObj.dbInit();
 		if(conn!=null) {
 			LOG.debug("Successful connection returned");
-			obj.dbHealth = true;
-			LOG.debug("db health is : "+obj.dbHealth);
+			cmHealth.dbHealth = true;
+			LOG.debug("db health is : "+cmHealth.dbHealth);
 		}
 		else {
-			LOG.error("db Health is : "+obj.dbHealth);
+			LOG.error("db Health is : "+cmHealth.dbHealth);
 			LOG.error("Unsuccessful connection returned");
 		}
+		businessLogic businessObj = businessLogic.getInstance();
 		try {
 			conn.close();
 			LOG.debug("Connection released successfully");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			LOG.error(e);
+		}
+		
+		finally {
+			try {
+				conn.close();
+				LOG.debug("Releasing DB connection");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				LOG.error(e);
+			}
 		}
 	}
 }

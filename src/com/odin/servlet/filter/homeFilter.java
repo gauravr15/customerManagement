@@ -1,9 +1,6 @@
 package com.odin.servlet.filter;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

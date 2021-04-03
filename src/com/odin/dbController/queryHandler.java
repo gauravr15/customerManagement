@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.odin.billing.billCalculator;
+import com.odin.core.businessLogic;
 
 
 
@@ -57,10 +58,10 @@ public class queryHandler extends HttpServlet{
 		}
 		finally{
 			try {
-				LOG.debug("Releasing db connection");
 				rs.close();
 				stmt.close();
 				conn.close();
+				LOG.debug("Releasing db connection");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				LOG.error("Failed to release connection.");
@@ -93,6 +94,7 @@ public class queryHandler extends HttpServlet{
 				rs.close();
 				stmt.close();
 				conn.close();
+				LOG.debug("Releasing DB connection");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				LOG.error(e);
@@ -124,8 +126,10 @@ public class queryHandler extends HttpServlet{
 			}
 			billCalculator billObj = new billCalculator();
 			int billAmount = billObj.billAmount(service);
-			int newPoint = total_point + (billAmount/10);
-			query = "INSERT INTO CUSTOMERS VALUES ('"+name+"','"+mob+"','"+registration_date+"',NOW(),'"+service+"','"+billAmount+"','"+billAmount/10+"');";
+			int newPoint = total_point + (billAmount/businessLogic.getPoint_ratio());
+			businessLogic.getInstance();
+			LOG.debug("point ratio is set as : "+businessLogic.getPoint_ratio());
+			query = "INSERT INTO CUSTOMERS VALUES ('"+name+"','"+mob+"','"+registration_date+"',NOW(),'"+service+"','"+billAmount+"','"+billAmount/businessLogic.getPoint_ratio()+"');";
 			LOG.debug("Query to fire : "+query);
 			stmt.executeUpdate(query);
 			query = "UPDATE CUSTOMER_INFO SET TOTAL_POINTS = '"+newPoint+"' WHERE mobile_no = '"+mob+"';";
@@ -141,6 +145,7 @@ public class queryHandler extends HttpServlet{
 				rs.close();
 				stmt.close();
 				conn.close();
+				LOG.debug("Releasing DB connection");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				LOG.error(e);
