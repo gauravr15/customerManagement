@@ -10,19 +10,22 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import com.odin.core.cmHealth;
-import com.odin.core.ipConfig;
 import com.odin.dbController.queryHandler;
 
 
 
 public class loginController extends HttpServlet{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4237555375962847950L;
 	Logger LOG =Logger.getLogger(loginController.class.getClass());
 	
+	
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		cmHealth obj = cmHealth.getInstance();
 		HttpSession session = req.getSession();
-		if(obj.propCheck == true && obj.clockHealth == true && obj.dbHealth == true) {
+		if(cmHealth.propCheck == true && cmHealth.clockHealth == true && cmHealth.dbHealth == true) {
 			
 				LOG.debug("login servlet started.");
 				String UserName = req.getParameter("username");

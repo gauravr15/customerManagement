@@ -36,7 +36,16 @@ public class customerHandler {
 			// TODO Auto-generated catch block
 			LOG.error(e);
 		}
-		
+		finally {
+			try {
+				stmt.close();
+				conn.close();
+				LOG.debug("Releasing DB connection");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				LOG.error(e);
+			}
+		}
 		return task_performed;
 	}
 }
