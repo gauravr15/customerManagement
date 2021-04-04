@@ -31,12 +31,14 @@ public class pointsController {
 			while(rs.next()) {
 				total_point = Integer.parseInt(rs.getString("TOTAL_POINTS"));
 			}
-			if(total_point >= redeem_point) {
+			if(redeem_point > businessLogic.getMax_point()){
+				LOG.debug("max redeem point is set as : "+businessLogic.getMax_point());
+				LOG.debug("max redeemable point exceeded");
+				task_performed = false;
+			}
+			else if(total_point >= redeem_point) {
+				LOG.debug("desired redeem points is less than max redeem points");
 				task_performed = true;
-				if(redeem_point > businessLogic.getMax_point()){
-					LOG.debug("max redeemable point exceeded");
-					task_performed = false;
-				}
 			}
 			else {
 				task_performed = false;

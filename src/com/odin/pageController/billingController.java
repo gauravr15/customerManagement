@@ -9,10 +9,13 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import com.odin.core.businessLogic;
 import com.odin.customerController.customerHandler;
 import com.odin.customerController.pointsController;
 import com.odin.customerController.validateCustomer;
 import com.odin.dbController.queryHandler;
+import com.odin.jsResponse.responses;
+import com.odin.smsController.sendSms;
 //import com.odin.smsController.sendSms;
 
 
@@ -74,8 +77,11 @@ public class billingController extends HttpServlet{
 						}
 						message = message+"services. Your total bill amount is "+billAmount+". Thank you and please visit again. Regards Radiance beauty Parlour.";
 						LOG.debug(message);
-						//sendSms smsObj = new sendSms();
-						//smsObj.sms(message, mob);
+						businessLogic.getInstance();
+						if(businessLogic.isSend_sms() == true) {
+							sendSms smsObj = new sendSms();
+							smsObj.sms(message, mob);
+						}
 					}
 					else {
 						LOG.error("Something went wrong");
@@ -86,8 +92,32 @@ public class billingController extends HttpServlet{
 					boolean IS_POINT_AVAILABLE = pointObj.pointsCheck(mob, point);
 					if(IS_POINT_AVAILABLE == true) {
 						LOG.debug("Points available");
+						boolean task_performed = queryObj.billingHandler(mob, service, point);
+						if(task_performed == true) {
+							LOG.debug("Billing successfully done");
+							String[] serviceList = service.split(",");
+							String message = "Thank you for opting for";
+							for(int i = 0;i<serviceList.length;i++) {
+								String[] servicesOpt = serviceList[i].trim().split(" ");
+								message = message+" "+servicesOpt[0]+",";
+								billAmount = billAmount +  Integer.parseInt(servicesOpt[1]);
+							}
+							int newBill = billAmount - Integer.parseInt(point);
+							message = message+"services. Your total bill amount is "+newBill+". Thank you and please visit again. Regards Radiance beauty Parlour.";
+							LOG.debug(message);
+							businessLogic.getInstance();
+							if(businessLogic.isSend_sms() == true) {
+								sendSms smsObj = new sendSms();
+								smsObj.sms(message, mob);
+							}
+						}
+						else {
+							LOG.error("Something went wrong");
+						}
 					}
 					else {
+						responses resObj = new responses();
+						resObj.service(req, res);
 						LOG.debug("Insufficient points");
 					}
 				}
