@@ -13,6 +13,7 @@ public class businessLogic {
 	private static int business_type= -1;
 	private static int point_ratio = -1;
 	private static int max_point = -1;
+	private static boolean send_sms = false;
 	public static businessLogic obj = new businessLogic();
 	static Logger LOG =Logger.getLogger(businessLogic.class.getClass());
 	
@@ -38,8 +39,15 @@ public class businessLogic {
 			LOG.debug("Query to fire : "+query);
 			rs= stmt.executeQuery(query);
 			while(rs.next()) {
-				max_point = Integer.parseInt(rs.getString("MAX_POINT"));
+				max_point = Integer.parseInt(rs.getString("PARAM_VALUE"));
 				LOG.debug(query);
+			}
+			query = "SELECT * FROM CONFIG WHERE PARAM_NAME = 'SEND_SMS';";
+			LOG.debug("Query to fire : "+query);
+			rs = stmt.executeQuery(query);
+			while(rs.next()) {
+				setSend_sms(Boolean.parseBoolean(rs.getString("PARAM_VALUE")));
+				LOG.debug("Value of send_sms is : "+isSend_sms());
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -78,5 +86,11 @@ public class businessLogic {
 	}
 	public static void setMax_point(int max_point) {
 		businessLogic.max_point = max_point;
+	}
+	public static boolean isSend_sms() {
+		return send_sms;
+	}
+	public static void setSend_sms(boolean send_sms) {
+		businessLogic.send_sms = send_sms;
 	}
 }

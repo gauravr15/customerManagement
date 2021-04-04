@@ -155,8 +155,59 @@ public class queryHandler extends HttpServlet{
 		return task_performed;
 	}
 	
-	public boolean billingHandler(String mob,String service,String bill, String point) {
+	public boolean billingHandler(String mob,String service, String point) {
 		boolean task_performed = false;
+		billCalculator billObj = new billCalculator();
+		int billAmount = billObj.billAmount(service);
+		int discountedBill = billAmount - Integer.parseInt(point);
+		LOG.debug("Amount payable is : "+discountedBill);
+		dbSetup dbObj = new dbSetup();
+		Connection conn = dbObj.dbInit();
+		Statement stmt = null;
+		ResultSet rs = null;
+		String name = null;
+		String registration_date = null;
+		int result = 0;
+		String query = "SELECT * FROM CUSTOMER_INFO WHERE MOBILE_NO = '"+mob+"'";
+		try {
+			LOG.debug("Query to fire : "+query);
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
+			int newPoint = 0;
+			int total_point = 0;
+			while(rs.next()) {
+				total_point = Integer.parseInt(rs.getString("TOTAL_POINTS"));
+				name = rs.getString("NAME");
+				registration_date = rs.getString("REGISTRATION_DATE");
+				LOG.debug("Name of customer is : "+name);
+			}
+			newPoint = total_point - Integer.parseInt(point);
+			query = "UPDATE CUSTOMER_INFO SET TOTAL_POINTS = '"+newPoint+"' WHERE MOBILE_NO = '"+mob+"';";
+			LOG.debug("Query to fire : "+query);
+			result = stmt.executeUpdate(query);
+			if(result != 0) {
+				query = "INSERT INTO CUSTOMERS VALUES ('"+name+"','"+mob+"','"+registration_date+"',NOW(),'"+service+"','"+discountedBill+"','-"+point+"');";
+				LOG.debug("Query to fire : "+query);
+				result = stmt.executeUpdate(query);
+				if(result != 0) {
+					task_performed = true;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			LOG.error(e);
+		}
+		finally {
+			try {
+				rs.close();
+				stmt.close();
+				conn.close();
+				LOG.debug("Releasing DB connection");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				LOG.error(e);
+			}
+		}
 		return task_performed;
 	}
 }

@@ -21,4 +21,12 @@
     <servlet-name>billing</servlet-name>
     <url-pattern>/billing</url-pattern>
   </servlet-mapping>
+   <servlet>
+    <servlet-name>checkPoint</servlet-name>
+    <servlet-class>com.odin.customerController.checkPoint</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>checkPoint</servlet-name>
+    <url-pattern>/checkPoint</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -22,7 +22,7 @@ import com.odin.dbController.queryHandler;
 /**
  * Servlet Filter implementation class homeFilter
  */
-@WebFilter({"/home.html","/billing.html"})
+@WebFilter({"/home.html","/billing.html","/checkPoint.html"})
 
 public class homeFilter implements Filter {
 
