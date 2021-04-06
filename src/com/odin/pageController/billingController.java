@@ -103,6 +103,9 @@ public class billingController extends HttpServlet{
 								billAmount = billAmount +  Integer.parseInt(servicesOpt[1]);
 							}
 							int newBill = billAmount - Integer.parseInt(point);
+							if (newBill<1) {
+								newBill = 0;
+							}
 							message = message+"services. Your total bill amount is "+newBill+". Thank you and please visit again. Regards Radiance beauty Parlour.";
 							LOG.debug(message);
 							businessLogic.getInstance();
