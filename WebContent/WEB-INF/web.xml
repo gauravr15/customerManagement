@@ -29,4 +29,36 @@
     <servlet-name>checkPoint</servlet-name>
     <url-pattern>/checkPoint</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>viewBill</servlet-name>
+    <servlet-class>com.odin.billing.viewBill</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>viewBill</servlet-name>
+    <url-pattern>/viewBill</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>bulkSms</servlet-name>
+    <servlet-class>com.odin.smsController.bulkSms</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>bulkSms</servlet-name>
+    <url-pattern>/bulkSms</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>expenses</servlet-name>
+    <servlet-class>com.odin.corporateController.expenseCalculator</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>expenses</servlet-name>
+    <url-pattern>/expenses</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>earning</servlet-name>
+    <servlet-class>com.odin.corporateController.earningCalculator</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>earning</servlet-name>
+    <url-pattern>/earning</url-pattern>
+  </servlet-mapping>
 </web-app>

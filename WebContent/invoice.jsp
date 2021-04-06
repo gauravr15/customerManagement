@@ -26,23 +26,31 @@ ResultSet resultSet = null;
 <p>Invoice</p>
 <table style="width:100%">
 <tr>
-<td>Service</td>
-<td>Amount</td>
+<td><b>Service</b></td>
+<td><b>Amount</b></td>
 </tr>
 <%
 try{
-String number=(String)session.getAttribute("customer_phone"); 
+	int amount = 0;
+	int point = 0;
+	int amountPayable = 0;
+String number=(String)session.getAttribute("customer_phone");
+
 connection = DriverManager.getConnection(connectionUrl+database, userid, password);
 statement=connection.createStatement();
+
 String sql ="SELECT * FROM customers where mobile_no = '"+number+"' ORDER BY last_visit_date DESC LIMIT 1";
+
 resultSet = statement.executeQuery(sql);
 while(resultSet.next()){
+	point = Integer.parseInt(resultSet.getString("points"));
 	String item = resultSet.getString("service");
 	String[] serviceList = item.split(",");
 	int count =0;
 	while(count < serviceList.length){
 		String productBill = serviceList[count].trim();
 		String[] billBreakdown = productBill.split(" ");
+		amount = amount + Integer.parseInt(billBreakdown[1]);
 		count++;
 		%>
 		<tr>
@@ -51,7 +59,16 @@ while(resultSet.next()){
 </tr>
 <%	}
 	}
+amountPayable = amount+point;
 %>
+<tr>
+<td><b>Discount</b></td>
+<td><%=point%></td>
+</tr>
+<tr>
+<td><b>Total</b></td>
+<td><%=amountPayable%></td>
+</tr>
 <%
 connection.close();
 } catch (Exception e) {
@@ -70,7 +87,6 @@ e.printStackTrace();
             }
         </style>
 <button class = "noprint" onclick="window.print()">Print Bill</button>
-<button class = "noprint" onclick="homePage()">Home</button>
 
 <script>
 function homePage() {
