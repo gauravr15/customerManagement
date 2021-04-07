@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration  monitorInterval="60">
+       <Appenders>
+       
+                  <!--ROOT log-->
+              <!--====================================-->
+              <RollingFile name="ROOT" fileName="D:/apache-tomcat-9.0.30/TOMCAT_LOGS/log4j/root.log" append="true" bufferedIO="true" filePattern="D:/apache-tomcat-9.0.30/TOMCAT_LOGS/log4j/$${date:yyyy-MM}/root%d{yyyy-MM-dd.HH}-%i.log.gz" >
+                     <PatternLayout>
+                           <Pattern>[%d]-[%t]-[%p]-[%C.%M (%L)]-%m%ex%n</Pattern>
+                     </PatternLayout>
+                     <Policies>
+                           <SizeBasedTriggeringPolicy size="100 MB" />
+                     </Policies>
+                     <DefaultRolloverStrategy max="10" />
+              </RollingFile>
+
+       </Appenders>
+
+       <Loggers>
+              <Root level="trace" additivity="false">
+                     <AppenderRef ref="ROOT" />
+              </Root>
+              
+       </Loggers>
+</Configuration>
+
+
+
