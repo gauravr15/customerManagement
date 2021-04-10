@@ -116,12 +116,10 @@ public class queryHandler extends HttpServlet{
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(query);
 			String name = null;
-			String registration_date = null;
 			int total_point = 0;
 			while(rs.next()) {
 				name = rs.getString("NAME");
 				LOG.debug("name of customer is : "+name);
-				registration_date = rs.getString("REGISTRATION_DATE");
 				total_point = Integer.parseInt(rs.getString("total_points"));
 			}
 			billCalculator billObj = new billCalculator();
@@ -129,10 +127,10 @@ public class queryHandler extends HttpServlet{
 			int newPoint = total_point + (billAmount/businessLogic.getPoint_ratio());
 			businessLogic.getInstance();
 			LOG.debug("point ratio is set as : "+businessLogic.getPoint_ratio());
-			query = "INSERT INTO CUSTOMERS VALUES ('"+name+"','"+mob+"','"+registration_date+"',NOW(),'"+service+"','"+billAmount+"','"+billAmount/businessLogic.getPoint_ratio()+"');";
+			query = "INSERT INTO CUSTOMERS VALUES ('"+name+"','"+mob+"',NOW(),'"+service+"','"+billAmount+"','"+billAmount/businessLogic.getPoint_ratio()+"');";
 			LOG.debug("Query to fire : "+query);
 			stmt.executeUpdate(query);
-			query = "UPDATE CUSTOMER_INFO SET TOTAL_POINTS = '"+newPoint+"' WHERE mobile_no = '"+mob+"';";
+			query = "UPDATE CUSTOMER_INFO SET TOTAL_POINTS = '"+newPoint+"', LAST_VISIT_DATE = NOW() WHERE mobile_no = '"+mob+"';";
 			LOG.debug("Query to fire : "+query);
 			stmt.executeUpdate(query);
 			task_performed = true;
@@ -166,7 +164,6 @@ public class queryHandler extends HttpServlet{
 		Statement stmt = null;
 		ResultSet rs = null;
 		String name = null;
-		String registration_date = null;
 		int result = 0;
 		String query = "SELECT * FROM CUSTOMER_INFO WHERE MOBILE_NO = '"+mob+"'";
 		try {
@@ -178,15 +175,14 @@ public class queryHandler extends HttpServlet{
 			while(rs.next()) {
 				total_point = Integer.parseInt(rs.getString("TOTAL_POINTS"));
 				name = rs.getString("NAME");
-				registration_date = rs.getString("REGISTRATION_DATE");
 				LOG.debug("Name of customer is : "+name);
 			}
 			newPoint = total_point - Integer.parseInt(point);
-			query = "UPDATE CUSTOMER_INFO SET TOTAL_POINTS = '"+newPoint+"' WHERE MOBILE_NO = '"+mob+"';";
+			query = "UPDATE CUSTOMER_INFO SET TOTAL_POINTS = '"+newPoint+"', LAST_VISIT_DATE = NOW() WHERE MOBILE_NO = '"+mob+"';";
 			LOG.debug("Query to fire : "+query);
 			result = stmt.executeUpdate(query);
 			if(result != 0) {
-				query = "INSERT INTO CUSTOMERS VALUES ('"+name+"','"+mob+"','"+registration_date+"',NOW(),'"+service+"','"+discountedBill+"','-"+point+"');";
+				query = "INSERT INTO CUSTOMERS VALUES ('"+name+"','"+mob+"',NOW(),'"+service+"','"+discountedBill+"','-"+point+"');";
 				LOG.debug("Query to fire : "+query);
 				result = stmt.executeUpdate(query);
 				if(result != 0) {

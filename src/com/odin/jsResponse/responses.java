@@ -13,6 +13,10 @@ import com.odin.dbController.queryHandler;
 
 public class responses extends HttpServlet{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7233825983134579536L;
 	Logger LOG = Logger.getLogger(responses.class.getClass());
 	
 	public void service(HttpServletRequest req, HttpServletResponse res) {

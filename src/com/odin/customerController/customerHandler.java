@@ -20,7 +20,7 @@ public class customerHandler {
 		Statement stmt = null;
 		int rs = 0;
 		try {
-			String query = "INSERT INTO CUSTOMER_INFO (MOBILE_NO,NAME,REGISTRATION_DATE,TOTAL_POINTS) VALUES ('"+mob+"','"+name+"',NOW(),'0')";
+			String query = "INSERT INTO CUSTOMER_INFO (MOBILE_NO,NAME,REGISTRATION_DATE,LAST_VISIT_DATE,TOTAL_POINTS) VALUES ('"+mob+"','"+name+"',NOW(),NOW(),'0')";
 			LOG.debug("Query to execute : "+query);
 			stmt = conn.createStatement();
 			rs = stmt.executeUpdate(query);

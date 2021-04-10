@@ -75,7 +75,10 @@ public class billingController extends HttpServlet{
 							message = message+" "+servicesOpt[0]+",";
 							billAmount = billAmount +  Integer.parseInt(servicesOpt[1]);
 						}
-						message = message+"services. Your total bill amount is "+billAmount+". Thank you and please visit again. Regards Radiance beauty Parlour.";
+						StringBuffer messageBuffer = new StringBuffer(message);
+						messageBuffer.deleteCharAt(messageBuffer.length()-1);
+						message = messageBuffer.toString();
+						message = message+" services. Your total bill amount is "+billAmount+". Thank you and please visit again. Regards Radiance beauty Parlour.";
 						LOG.debug(message);
 						businessLogic.getInstance();
 						if(businessLogic.isSend_sms() == true) {
@@ -106,7 +109,10 @@ public class billingController extends HttpServlet{
 							if (newBill<1) {
 								newBill = 0;
 							}
-							message = message+"services. Your total bill amount is "+newBill+". Thank you and please visit again. Regards Radiance beauty Parlour.";
+							StringBuffer messageBuffer = new StringBuffer(message);
+							messageBuffer.deleteCharAt(messageBuffer.length()-1);
+							message = messageBuffer.toString();
+							message = message+" services. Your total bill amount is "+newBill+". Thank you and please visit again. Regards Radiance beauty Parlour.";
 							LOG.debug(message);
 							businessLogic.getInstance();
 							if(businessLogic.isSend_sms() == true) {
