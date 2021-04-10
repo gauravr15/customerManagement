@@ -23,7 +23,7 @@ ResultSet resultSet = null;
 <html>
 <body>
 
-<p>Invoice</p>
+<p>Profit Calculator</p>
 <table style="width:100%">
 <tr>
 <td><b>Service</b></td>
@@ -34,18 +34,14 @@ try{
 	int amount = 0;
 	int point = 0;
 	int amountPayable = 0;
-String number=(String)session.getAttribute("customer_phone");
-String date = (String)session.getAttribute("date");
-String sql = "SELECT * FROM customers where mobile_no ='0';";
+String fromDate=(String)session.getAttribute("fromDate");
+String toDate = (String)session.getAttribute("toDate");
+System.out.println(fromDate);
+System.out.println(toDate);
+String sql = "SELECT * FROM customers WHERE last_visit_date >= '"+fromDate+"' AND last_visit_date <= '"+toDate+"';";
+System.out.println(sql);
 connection = DriverManager.getConnection(connectionUrl+database, userid, password);
 statement=connection.createStatement();
-if(date == null){
-	sql ="SELECT * FROM customers where mobile_no = '"+number+"' ORDER BY last_visit_date DESC LIMIT 1;";
-	
-}
-else{
-	sql = "SELECT * FROM customers where mobile_no = '"+number+"' AND last_visit_date like '%"+date+"%';";
-	
 resultSet = statement.executeQuery(sql);
 while(resultSet.next()){
 	point = Integer.parseInt(resultSet.getString("points"));
@@ -58,10 +54,6 @@ while(resultSet.next()){
 		amount = amount + Integer.parseInt(billBreakdown[1]);
 		count++;
 		%>
-		<tr>
-<td><%=billBreakdown[0] %></td>
-<td><%=billBreakdown[1] %></td>
-</tr>
 <%	}
 }
 if(point < 0){
@@ -73,16 +65,30 @@ else{
 }
 %>
 <tr>
-<td><b>Discount</b></td>
-<td><%=point%></td>
-</tr>
-<tr>
-<td><b>Total</b></td>
+<td><b>Earning</b></td>
 <td><%=amountPayable%></td>
 </tr>
 <%
-connection.close();
+sql = "SELECT * FROM expense WHERE date >= '"+fromDate+"' AND date <= '"+toDate+"';";
+System.out.println(sql);
+connection = DriverManager.getConnection(connectionUrl+database, userid, password);
+statement=connection.createStatement();
+resultSet = statement.executeQuery(sql);
+int expense = 0;
+while(resultSet.next()){
+	expense = Integer.parseInt(resultSet.getString("total_amount"));
 }
+%>
+<tr>
+<td><b>Expenses</b></td>
+<td><%=expense%></td>
+</tr>
+<tr>
+<td><b>Profit</b></td>
+<td><%=amountPayable-expense%></td>
+</tr>
+<%
+connection.close();
 }
 catch (Exception e) {
 e.printStackTrace();

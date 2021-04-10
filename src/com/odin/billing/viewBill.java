@@ -25,20 +25,22 @@ public class viewBill extends HttpServlet{
 		String mobile = req.getParameter("mobile");
 		String date = req.getParameter("date");
 		HttpSession session = req.getSession();
-		//HttpSession sessionDate = req.getSession();
 		queryHandler queryObj = new queryHandler();
 		LOG.debug("Mobile number is : "+mobile);
 		LOG.debug("date is : "+date);
 		if(date.isEmpty()) {
 			LOG.debug("performing flow with date as null");
 			session.setAttribute("customer_phone", mobile);
-			try {
-				LOG.debug("Redirecting to invoice.jsp");
-				res.sendRedirect("http://"+queryObj.ipSetup()+":8080/Subscription/invoice.jsp");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				LOG.error(e);
-			}
+		}
+		else {
+			session.setAttribute("date", date);
+		}
+		try {
+			LOG.debug("Redirecting to invoice.jsp");
+			res.sendRedirect("http://"+queryObj.ipSetup()+":8080/Subscription/invoice.jsp");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			LOG.error(e);
 		}
 	}
 }
