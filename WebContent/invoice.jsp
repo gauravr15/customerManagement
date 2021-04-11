@@ -36,16 +36,17 @@ try{
 	int amountPayable = 0;
 String number=(String)session.getAttribute("customer_phone");
 String date = (String)session.getAttribute("date");
-String sql = "SELECT * FROM customers where mobile_no ='0';";
 connection = DriverManager.getConnection(connectionUrl+database, userid, password);
 statement=connection.createStatement();
-if(date == null){
+String sql = null;
+if(date == null || date.isEmpty() || date.trim().isEmpty()){
 	sql ="SELECT * FROM customers where mobile_no = '"+number+"' ORDER BY last_visit_date DESC LIMIT 1;";
 	
 }
 else{
 	sql = "SELECT * FROM customers where mobile_no = '"+number+"' AND last_visit_date like '%"+date+"%';";
-	
+}
+System.out.print(sql);
 resultSet = statement.executeQuery(sql);
 while(resultSet.next()){
 	point = Integer.parseInt(resultSet.getString("points"));
@@ -82,7 +83,6 @@ else{
 </tr>
 <%
 connection.close();
-}
 }
 catch (Exception e) {
 e.printStackTrace();

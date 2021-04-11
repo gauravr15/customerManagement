@@ -24,7 +24,7 @@ import com.odin.dbController.queryHandler;
  */
 
 
-@WebFilter({"/home.html","/billing.html","/checkPoint.html","/bulkSms.html","/earning.html","/earning.jsp","/expenses.html","/invoice.jsp","/viewBill.html"})
+@WebFilter({"/home.html","/billing.html","/checkPoint.html","/bulkSms.html","/earning.html","/earning.jsp","/expenses.html","/invoice.jsp","/viewBill.html","/changePassword.html"})
 
 public class homeFilter implements Filter {
 

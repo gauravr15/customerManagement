@@ -27,7 +27,7 @@ CREATE TABLE `config` (
   `type` varchar(10) DEFAULT NULL,
   `param_name` varchar(20) DEFAULT NULL,
   `param_value` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -107,7 +107,7 @@ CREATE TABLE `expense` (
   `date` varchar(40) DEFAULT NULL,
   `reason` varchar(200) DEFAULT NULL,
   `total_amount` varchar(10) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

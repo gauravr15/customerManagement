@@ -1,6 +1,7 @@
 package com.odin.login;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +42,16 @@ public class loginController extends HttpServlet{
 					res.sendRedirect("http://"+ip+":8080/Subscription/home.html");
 				}
 				else {
+					PrintWriter out = res.getWriter();
+					out.print("<!DOCTYPE html>\r\n"
+							+ "<html>\r\n"
+							+ "<body>\r\n"
+							+ "<script>\r\n"
+							+ "alert(\"Incorrect user id or password.\");\r\n"
+							+ "window.location=\"http://"+queryObj.ipSetup()+":8080/Subscription/login.html\"; \r\n"
+							+ "</script>\r\n"
+							+ "</body>\r\n"
+							+ "</html>");
 					LOG.error("no such user found.");
 				}
 		}
