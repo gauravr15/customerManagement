@@ -26,6 +26,7 @@ public class ipConfig {
 				LOG.debug("Query to fire : "+query);
 				stmt = conn.createStatement();
 				int result = stmt.executeUpdate(query);
+				LOG.debug("Result is "+result);
 				if(result !=0) {
 					task_performed = true;
 				}
