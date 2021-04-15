@@ -53,7 +53,6 @@ public class startup extends HttpServlet{
 			LOG.error("db Health is : "+cmHealth.dbHealth);
 			LOG.error("Unsuccessful connection returned");
 		}
-		businessLogic businessObj = businessLogic.getInstance();
 		try {
 			conn.close();
 			LOG.debug("Connection released successfully");

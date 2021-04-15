@@ -78,12 +78,22 @@ public class queryHandler extends HttpServlet{
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
-			String query = "SELECT * FROM CONFIG WHERE MODULE = 'SYSTEM' AND TYPE = 0 AND PARAM_NAME = 'HOST_IP';";
+			String query ="SELECT * FROM CONFIG WHERE MODULE = 'SYSTEM' AND TYPE = 0 AND PARAM_NAME = 'REMOTE_IP';";
+			LOG.debug("Query to fire : "+query);
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
+			if(rs.next()) {
+				ip = rs.getString("PARAM_VALUE");
+				LOG.debug("ip return value is : "+ip);
+			}
+			else {
+			query = "SELECT * FROM CONFIG WHERE MODULE = 'SYSTEM' AND TYPE = 0 AND PARAM_NAME = 'HOST_IP';";
 			LOG.debug("Query to fire : "+query);
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(query);
 			while(rs.next()) {
 				ip = rs.getString("PARAM_VALUE");
+			}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
