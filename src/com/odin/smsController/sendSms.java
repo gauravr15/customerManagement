@@ -40,7 +40,7 @@ public class sendSms {
 		else {
 			LOG.debug("UNABLE TO INSERT DATA IN SEND SMS TABLE");
 		}
-		String apiKey="C18ZxQSlaz36R7rBJjwFcbHnGYuM5fpsD9AhXT2VyvIeKioW0EvQVtbzMAeoyGwS4u0dKOaH3nBZgi1h";
+		String apiKey="api_key";
 		String sendId="FSTSMS";
 		//important step...
 		message=URLEncoder.encode(message, "UTF-8");
